@@ -42,8 +42,11 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                withKubeConfig([credentialsId: 'CW2-kube-config-id']) {
+                withCredentials([file(credentialsId: 'CW2-kube-config-id', variable: 'KUBECONFIG')]) {
                     script {
+                        // Ensure KUBECONFIG is set before using kubectl
+                        sh 'export KUBECONFIG=$KUBECONFIG'
+                        // Deploy the application to Kubernetes
                         sh 'kubectl apply -f deployment.yaml'
                     }
                 }
