@@ -44,9 +44,9 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'CW2-kube-config-id', variable: 'KUBECONFIG')]) {
                     script {
-                        // Ensure KUBECONFIG is set before using kubectl
+                        // Update the KUBECONFIG environment variable to point to the correct config
                         sh 'export KUBECONFIG=$KUBECONFIG'
-                        // Apply the deployment with validation disabled
+                        sh 'kubectl config set-cluster minikube --server=https://192.168.49.2:6443'  // Update to the correct Minikube IP
                         sh 'kubectl apply -f deployment.yaml --validate=false'
                     }
                 }
