@@ -4,7 +4,6 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'safridigcu/cw2app'
         DOCKER_TAG = 'latest'
-        KUBECONFIG_CREDENTIALS_ID = 'your-kube-config-id' // Set this to your actual Kubernetes credentials ID in Jenkins
     }
 
     stages {
@@ -43,8 +42,8 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                script {
-                    withKubeConfig(credentialsId: "$KUBECONFIG_CREDENTIALS_ID") {
+                withKubeConfig([credentialsId: 'CW2-kube-config-id']) {
+                    script {
                         sh 'kubectl apply -f deployment.yaml'
                     }
                 }
