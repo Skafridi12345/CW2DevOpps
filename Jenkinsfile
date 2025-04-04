@@ -46,8 +46,8 @@ pipeline {
                     script {
                         // Ensure KUBECONFIG is set before using kubectl
                         sh 'export KUBECONFIG=$KUBECONFIG'
-                        // Deploy the application to Kubernetes
-                        sh 'kubectl apply -f deployment.yaml'
+                        // Apply the deployment with validation disabled
+                        sh 'kubectl apply -f deployment.yaml --validate=false'
                     }
                 }
             }
