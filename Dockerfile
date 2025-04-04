@@ -4,14 +4,14 @@ FROM node:18
 # Set working directory
 WORKDIR /usr/src/app
 
-# Copy package.json if you have one (skip if not using)
-# COPY package*.json ./
-# RUN npm install
+# Install dependencies first (cached layer)
+COPY package*.json ./
+RUN npm install
 
 # Copy app files
 COPY . .
 
-# Expose port (match what your app listens on)
+# Expose the correct port (matches server.js)
 EXPOSE 3000
 
 # Start the app
