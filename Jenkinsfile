@@ -45,9 +45,12 @@ pipeline {
             steps {
                 script {
                     echo "Deploying to Kubernetes..."
-                    sh 'kubectl apply -f deployment.yaml --validate=false'
-                    sh 'kubectl get pods'
-                    sh 'kubectl get svc'
+                    sh '''
+                        export KUBECONFIG=/home/ubuntu/.kube/config
+                        kubectl apply -f deployment.yaml --validate=false
+                        kubectl get pods
+                        kubectl get svc
+                    '''
                 }
             }
         }
