@@ -12,7 +12,7 @@ pipeline {
             steps {
                 script {
                     echo "Building Docker image..."
-                    sh 'docker build -t $IMAGE_NAME:$TAG .'
+                    sh "docker build -t ${IMAGE_NAME}:${TAG} ."
                 }
             }
         }
@@ -21,9 +21,9 @@ pipeline {
             steps {
                 script {
                     echo "Testing container launch..."
-                    sh '''
+                    sh """
                         docker rm -f test-container || true
-                        docker run -d --name test-container -p 8081:8080 $IMAGE_NAME:$TAG
+                        docker run -d --name test-container -p 8081:8080 ${IMAGE_NAME}:${TAG}
                         echo "Waiting for container to be ready..."
                         sleep 3
                         for i in {1..5}; do
@@ -31,12 +31,12 @@ pipeline {
                             echo "Container is up!"
                             break
                           else
-                            echo "Retry $i: waiting 2s..."
+                            echo "Retry \$i: waiting 2s..."
                             sleep 2
                           fi
                         done
                         docker rm -f test-container
-                    '''
+                    """
                 }
             }
         }
@@ -46,8 +46,8 @@ pipeline {
                 script {
                     echo "Pushing image to DockerHub..."
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                        sh 'docker push $IMAGE_NAME:$TAG'
+                        sh "echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin"
+                        sh "docker push ${IMAGE_NAME}:${TAG}"
                     }
                 }
             }
@@ -57,11 +57,7 @@ pipeline {
             steps {
                 script {
                     echo "Deploying to Kubernetes..."
-                    sh '''
-                        kubectl apply -f deployment.yaml --validate=false
-                        kubectl get pods
-                        kubectl get svc
-                    '''
+                    sh "kubectl --kubeconfig=${KUBECONFIG} apply -f deployment.yaml"
                 }
             }
         }
