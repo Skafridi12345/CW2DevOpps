@@ -45,7 +45,7 @@ pipeline {
             steps {
                 script {
                     echo "Deploying to Kubernetes..."
-                    sh 'kubectl apply -f deployment.yaml'
+                    sh 'kubectl apply -f deployment.yaml --validate=false'
                     sh 'kubectl get pods'
                     sh 'kubectl get svc'
                 }
