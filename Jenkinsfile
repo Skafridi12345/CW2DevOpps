@@ -57,7 +57,12 @@ pipeline {
             steps {
                 script {
                     echo "Deploying to Kubernetes..."
-                    sh "kubectl --kubeconfig=${KUBECONFIG} apply -f deployment.yaml"
+                    // Use the kubeconfig and specify the context
+                    sh '''
+                        kubectl --kubeconfig=/var/lib/jenkins/.kube/config \
+                               --context=minikube \
+                               apply -f deployment.yaml
+                    '''
                 }
             }
         }
