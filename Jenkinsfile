@@ -20,11 +20,22 @@ pipeline {
             steps {
                 script {
                     echo "Testing container launch..."
-                    sh 'docker rm -f test-container || true'
-                    sh 'docker run -d --name test-container -p 8081:8080 $IMAGE_NAME:$TAG'
-                    sh 'sleep 3'
-                    sh 'curl http://localhost:8081'
-                    sh 'docker rm -f test-container'
+                    sh '''
+                        docker rm -f test-container || true
+                        docker run -d --name test-container -p 8081:8080 $IMAGE_NAME:$TAG
+                        echo "Waiting for container to be ready..."
+                        sleep 3
+                        for i in {1..5}; do
+                          if curl -s http://localhost:8081; then
+                            echo "Container is up!"
+                            break
+                          else
+                            echo "Retry $i: waiting 2s..."
+                            sleep 2
+                          fi
+                        done
+                        docker rm -f test-container
+                    '''
                 }
             }
         }
