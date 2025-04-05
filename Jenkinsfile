@@ -20,13 +20,9 @@ pipeline {
             steps {
                 script {
                     echo "Testing container launch..."
-                    // Run the container in detached mode
-                    sh 'docker run -d --name test-container -p 8080:8080 $IMAGE_NAME:$TAG'
-                    // Wait a moment for container to boot up
+                    sh 'docker run -d --name test-container -p 8081:8080 $IMAGE_NAME:$TAG'
                     sh 'sleep 3'
-                    // Run curl inside Jenkins to check the container is responding
-                    sh 'curl http://localhost:8080'
-                    // Clean up the container
+                    sh 'curl http://localhost:8081'
                     sh 'docker rm -f test-container'
                 }
             }
