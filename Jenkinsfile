@@ -4,6 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = 'safridigcu/cw2-server'
         TAG = 'latest'
+        KUBECONFIG = '/var/lib/jenkins/.kube/config'
     }
 
     stages {
@@ -57,7 +58,6 @@ pipeline {
                 script {
                     echo "Deploying to Kubernetes..."
                     sh '''
-                        export KUBECONFIG=/home/ubuntu/.kube/config
                         kubectl apply -f deployment.yaml --validate=false
                         kubectl get pods
                         kubectl get svc
