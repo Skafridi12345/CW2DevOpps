@@ -1,4 +1,4 @@
-apiVersion: apps/v1
+apiVersion: apps/v1 
 kind: Deployment
 metadata:
   name: cw2app-deployment
@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: cw2app-container
-          image: safridigcu/cw2app:latest
+          image: safridigcu/cw2-server:latest  # <-- match Jenkins build
+          imagePullPolicy: Always              # <-- force pull every time
           ports:
             - containerPort: 8080   
 
