@@ -16,7 +16,7 @@ spec:
         - name: cw2app-container
           image: safridigcu/cw2app:latest
           ports:
-            - containerPort: 3000
+            - containerPort: 8080   
 
 ---
 apiVersion: v1
@@ -29,5 +29,5 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8080
+      targetPort: 8080   
   type: NodePort
