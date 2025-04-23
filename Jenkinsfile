@@ -11,8 +11,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    echo "Building Docker image..."
-                    sh "docker build -t ${IMAGE_NAME}:${TAG} ."
+                    echo "Building Docker image with no cache..."
+                    sh "docker build --no-cache -t ${IMAGE_NAME}:${TAG} ."
                 }
             }
         }
@@ -57,11 +57,10 @@ pipeline {
             steps {
                 script {
                     echo "Deploying to Kubernetes..."
-                    // Use the kubeconfig and specify the context
+                    // Apply updated deployment and force rollout restart
                     sh '''
-                        kubectl --kubeconfig=/var/lib/jenkins/.kube/config \
-                               --context=minikube \
-                               apply -f deployment.yaml
+                        kubectl --kubeconfig=${KUBECONFIG} --context=minikube apply -f deployment.yaml
+                        kubectl --kubeconfig=${KUBECONFIG} --context=minikube rollout restart deployment cw2app-deployment
                     '''
                 }
             }
